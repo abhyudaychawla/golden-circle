@@ -1,7 +1,7 @@
 import Image from "next/image";
 
-const DISCORD_LINK = "https://discord.com/channels/1474529773115150504/1474529774239093034";
-const INSTAGRAM_LINK = "https://www.instagram.com/dylanrtrades?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==";
+const DISCORD_LINK = "https://discord.gg/NcwvUeHN";
+const INSTAGRAM_LINK = "https://www.instagram.com/thegoldencircleig?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==";
 
 export default function Home() {
   return (
@@ -54,19 +54,24 @@ export default function Home() {
   </div>
 
   <div className="hidden items-center gap-3 md:flex">
-    <a
-      href="#"
-      className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-slate-200 hover:bg-white/10"
-    >
-      Instagram
-    </a>
-    <a
-      href="#"
-      className="rounded-xl bg-yellow-400 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-yellow-300"
-    >
-      Join Discord
-    </a>
-  </div>
+  <a
+    href={INSTAGRAM_LINK}
+    target="_blank"
+    rel="noreferrer"
+    className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-slate-200 hover:bg-white/10"
+  >
+    Instagram
+  </a>
+
+  <a
+    href={DISCORD_LINK}
+    target="_blank"
+    rel="noreferrer"
+    className="rounded-xl bg-yellow-400 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-yellow-300"
+  >
+    Join Discord
+  </a>
+</div>
 </nav>
 
         {/* Hero */}
