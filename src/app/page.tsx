@@ -37,7 +37,7 @@ export default function Home() {
         <nav className="flex items-center justify-between">
   <div className="flex items-center gap-3">
     <Image
-      src="/logo.png"
+      src="/TGC_New.jpeg"
       alt="Golden Circle Logo"
       width={40}
       height={40}
@@ -84,7 +84,7 @@ export default function Home() {
             </div>
 
             <h1 className="mt-5 text-5xl font-semibold tracking-tight md:text-6xl">
-              Structured Gold Trading.
+              The Golden Circle.
             <span className="block text-yellow-300">
               Powered by El Dorado.
             </span>
