@@ -2,6 +2,7 @@ import Image from "next/image";
 
 const DISCORD_LINK = "https://discord.gg/NcwvUeHN";
 const INSTAGRAM_LINK = "https://www.instagram.com/thegoldencircleig?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==";
+const WHOP_LINK = "https://whop.com/joined/thegoldencircle/"
 
 export default function Home() {
   return (
@@ -110,6 +111,14 @@ export default function Home() {
               >
                 Follow on Instagram
               </a>
+              <a
+              href={WHOP_LINK}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/12 bg-white/5 px-6 py-3 text-sm font-semibold text-slate-100 backdrop-blur hover:bg-white/10"
+              >
+                Join via Whop
+              </a>
             </div>
 
             <div className="mt-6 flex flex-wrap gap-2 text-xs text-slate-400">
@@ -179,6 +188,14 @@ export default function Home() {
                 className="flex-1 rounded-2xl border border-white/12 bg-white/5 px-4 py-3 text-center text-sm font-semibold hover:bg-white/10"
               >
                 Instagram
+              </a>
+              <a
+               href={WHOP_LINK}
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-slate-200 hover:bg-white/10"
+              >
+                Whop
               </a>
             </div>
           </div>
