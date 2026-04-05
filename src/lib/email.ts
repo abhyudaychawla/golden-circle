@@ -1,6 +1,11 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy — only instantiated when an email is actually sent, not at module load.
+function getResend() {
+  const key = process.env.RESEND_API_KEY;
+  if (!key) throw new Error("RESEND_API_KEY is not set");
+  return new Resend(key);
+}
 
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || "hello@goldencirclecoaching.com";
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@goldencirclecoaching.com";
@@ -98,7 +103,7 @@ export async function sendConfirmationEmail(
   `;
 
   try {
-    await resend.emails.send({
+    await getResend().emails.send({
       from: `Alexandra Mercer <${FROM_EMAIL}>`,
       to: [to],
       subject: isConsultation
@@ -150,7 +155,7 @@ export async function sendAdminNotification(
   `;
 
   try {
-    await resend.emails.send({
+    await getResend().emails.send({
       from: `Golden Circle Coaching <${FROM_EMAIL}>`,
       to: [ADMIN_EMAIL],
       subject: `[Golden Circle] New ${typeLabel} from ${data.fullName || "Unknown"}`,
