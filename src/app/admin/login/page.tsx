@@ -1,11 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function AdminLoginPage() {
-  const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -27,27 +25,23 @@ export default function AdminLoginPage() {
     if (res.ok) {
       window.location.href = "/admin";
     } else {
-      setError("Invalid email or password.");
+      setError("Invalid credentials.");
     }
   }
 
   return (
     <div className="min-h-screen bg-[#0D1521] flex items-center justify-center px-6">
-      {/* Background decoration */}
       <div className="pointer-events-none fixed inset-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(201,169,110,0.06),transparent_50%)]" />
       </div>
 
       <div className="relative w-full max-w-sm">
-        {/* Logo */}
         <div className="mb-8 flex flex-col items-center gap-3">
-          <div className="w-12 h-12 relative">
-            <svg viewBox="0 0 48 48" fill="none" className="w-12 h-12">
-              <circle cx="24" cy="24" r="22" stroke="#C9A96E" strokeWidth="1" fill="none" opacity="0.5" />
-              <circle cx="24" cy="24" r="14" stroke="#C9A96E" strokeWidth="1" fill="none" />
-              <circle cx="24" cy="24" r="3" fill="#C9A96E" />
-            </svg>
-          </div>
+          <svg viewBox="0 0 48 48" fill="none" className="w-12 h-12">
+            <circle cx="24" cy="24" r="22" stroke="#C9A96E" strokeWidth="1" fill="none" opacity="0.5" />
+            <circle cx="24" cy="24" r="14" stroke="#C9A96E" strokeWidth="1" fill="none" />
+            <circle cx="24" cy="24" r="3" fill="#C9A96E" />
+          </svg>
           <div className="text-center">
             <p
               className="text-[#C9A96E] text-xl font-light"
@@ -59,7 +53,6 @@ export default function AdminLoginPage() {
           </div>
         </div>
 
-        {/* Card */}
         <div className="bg-[#1B2A4A]/40 border border-[#C9A96E]/20 rounded-2xl p-8 shadow-[0_20px_60px_rgba(0,0,0,0.3)]">
           <h1
             className="text-white text-2xl font-light mb-1"
@@ -117,10 +110,7 @@ export default function AdminLoginPage() {
         </div>
 
         <div className="mt-6 text-center">
-          <Link
-            href="/"
-            className="text-[#8A95A5] text-sm hover:text-[#C9A96E] transition-colors"
-          >
+          <Link href="/" className="text-[#8A95A5] text-sm hover:text-[#C9A96E] transition-colors">
             ← Back to website
           </Link>
         </div>

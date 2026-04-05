@@ -1,5 +1,5 @@
 import AnimateIn from "@/components/AnimateIn";
-import LeadForm from "@/components/LeadForm";
+import GuideStrip from "@/components/GuideStrip";
 
 const serif = "var(--font-cormorant-garamond)";
 const sans = "var(--font-inter)";
@@ -160,12 +160,14 @@ export default function HomePage() {
           {/* CTAs */}
           <div className="animate-fade-up delay-600 flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
-              href="#access"
+              href="https://whop.com/joined/thegoldencircle/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="bg-[#C9A96E] text-[#0a0a0a] text-[11px] font-medium tracking-[0.24em] uppercase
                          px-10 py-4 hover:bg-white transition-colors duration-300"
               style={{ fontFamily: sans }}
             >
-              Get Free Access →
+              Get Access on Whop →
             </a>
             <a
               href="#modules"
@@ -427,49 +429,181 @@ export default function HomePage() {
 
       <GoldDivider />
 
-      {/* ══ ACCESS / CTA ═════════════════════════════════════════════ */}
+      {/* ══ JOIN THE CIRCLE ══════════════════════════════════════════ */}
       <section id="access" className="relative bg-[#0a0a0a] py-36 px-6 overflow-hidden">
-        {/* Bottom glow */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0"
-        >
+        {/* Ambient glow */}
+        <div aria-hidden className="pointer-events-none absolute inset-0">
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2
                           w-[700px] h-[350px] rounded-full
                           bg-[#C9A96E]/[0.06] blur-[110px]" />
         </div>
 
-        <AnimateIn className="relative z-10 max-w-3xl mx-auto text-center">
-          <SectionLabel text="Exclusively Yours" />
+        <div className="relative z-10 max-w-5xl mx-auto">
+          <AnimateIn className="text-center mb-16">
+            <SectionLabel text="Join The Circle" />
+            <h2
+              className="mt-10 text-white text-[clamp(2.2rem,6vw,4.8rem)] leading-[1.06]"
+              style={{ fontFamily: serif, fontWeight: 600 }}
+            >
+              One system.{" "}
+              <br />
+              <em className="italic" style={{ color: "#C9A96E", fontWeight: 400 }}>
+                Three platforms.
+              </em>
+            </h2>
+          </AnimateIn>
 
-          <h2
-            className="mt-10 mb-6 text-white text-[clamp(2.2rem,6vw,4.8rem)] leading-[1.06]"
-            style={{ fontFamily: serif, fontWeight: 600 }}
-          >
-            The complete TGC system.{" "}
-            <br />
-            <em className="italic" style={{ color: "#C9A96E", fontWeight: 400 }}>
-              Get free access.
-            </em>
-          </h2>
+          {/* Whop — primary card */}
+          <AnimateIn>
+            <div className="border-t-2 border-[#C9A96E] bg-[#0f0f0f] p-10 md:p-14
+                            flex flex-col md:flex-row items-start md:items-center
+                            justify-between gap-10 mb-4">
+              <div>
+                <p
+                  className="text-[#C9A96E] text-[9px] tracking-[0.34em] uppercase mb-4"
+                  style={{ fontFamily: sans }}
+                >
+                  Course · Alerts · Community
+                </p>
+                <h3
+                  className="text-white text-[clamp(1.8rem,4vw,2.8rem)] font-light leading-tight mb-4"
+                  style={{ fontFamily: serif }}
+                >
+                  The Complete TGC System
+                </h3>
+                <p
+                  className="text-[#4E4E4E] text-sm leading-relaxed max-w-lg"
+                  style={{ fontFamily: sans, fontWeight: 300 }}
+                >
+                  All seven modules, live trade alerts, private community access —
+                  everything in one place on Whop.
+                </p>
+              </div>
+              <a
+                href="https://whop.com/joined/thegoldencircle/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-shrink-0 bg-[#C9A96E] text-[#0a0a0a] text-[11px] font-medium
+                           tracking-[0.24em] uppercase px-10 py-4
+                           hover:bg-white transition-colors duration-300 whitespace-nowrap"
+                style={{ fontFamily: sans }}
+              >
+                Get Access on Whop →
+              </a>
+            </div>
+          </AnimateIn>
 
-          <p
-            className="text-[#4E4E4E] text-base leading-relaxed mb-14 max-w-xl mx-auto"
-            style={{ fontFamily: sans, fontWeight: 300 }}
-          >
-            Enter your email and we&apos;ll send you the full Mean Reversion Student Guide —
-            no cost, no catch.
-          </p>
+          {/* Discord + Instagram */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <AnimateIn delay={80}>
+              <div className="border border-[#1E1E1E] bg-[#0d0d0d] p-10
+                              hover:border-[#C9A96E]/25 transition-colors duration-300 h-full
+                              flex flex-col justify-between gap-8">
+                <div>
+                  <p
+                    className="text-[#C9A96E] text-[9px] tracking-[0.34em] uppercase mb-4"
+                    style={{ fontFamily: sans }}
+                  >
+                    Community
+                  </p>
+                  <h3
+                    className="text-white text-2xl font-light mb-3"
+                    style={{ fontFamily: serif }}
+                  >
+                    Live Discord
+                  </h3>
+                  <p
+                    className="text-[#4A4A4A] text-sm leading-relaxed"
+                    style={{ fontFamily: sans, fontWeight: 300 }}
+                  >
+                    Real-time alerts, session recaps, and trader Q&amp;A.
+                    Where the work actually happens.
+                  </p>
+                </div>
+                <a
+                  href="https://discord.gg/dX7Ghutmeu"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="border border-[#2E2E2E] text-[#888] text-[11px] tracking-[0.24em]
+                             uppercase px-7 py-3 self-start
+                             hover:border-[#C9A96E]/50 hover:text-white transition-all duration-300"
+                  style={{ fontFamily: sans }}
+                >
+                  Join Discord →
+                </a>
+              </div>
+            </AnimateIn>
 
-          <LeadForm />
+            <AnimateIn delay={160}>
+              <div className="border border-[#1E1E1E] bg-[#0d0d0d] p-10
+                              hover:border-[#C9A96E]/25 transition-colors duration-300 h-full
+                              flex flex-col justify-between gap-8">
+                <div>
+                  <p
+                    className="text-[#C9A96E] text-[9px] tracking-[0.34em] uppercase mb-4"
+                    style={{ fontFamily: sans }}
+                  >
+                    Social
+                  </p>
+                  <h3
+                    className="text-white text-2xl font-light mb-3"
+                    style={{ fontFamily: serif }}
+                  >
+                    @thegoldencircleig
+                  </h3>
+                  <p
+                    className="text-[#4A4A4A] text-sm leading-relaxed"
+                    style={{ fontFamily: sans, fontWeight: 300 }}
+                  >
+                    Charts, trade setups, and market analysis —
+                    follow for daily content.
+                  </p>
+                </div>
+                <a
+                  href="https://www.instagram.com/thegoldencircleig/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="border border-[#2E2E2E] text-[#888] text-[11px] tracking-[0.24em]
+                             uppercase px-7 py-3 self-start
+                             hover:border-[#C9A96E]/50 hover:text-white transition-all duration-300"
+                  style={{ fontFamily: sans }}
+                >
+                  Follow on Instagram →
+                </a>
+              </div>
+            </AnimateIn>
+          </div>
 
-          <p
-            className="mt-10 text-[#2E2E2E] text-[10px] tracking-[0.34em] uppercase"
-            style={{ fontFamily: sans }}
-          >
-            ◆&nbsp;&nbsp;Confidential – For Educational Use&nbsp;&nbsp;◆
-          </p>
-        </AnimateIn>
+          {/* Guide strip */}
+          <AnimateIn delay={200}>
+            <div className="mt-12 border-t border-[#161616] pt-12 text-center space-y-5">
+              <div>
+                <p
+                  className="text-[#C9A96E] text-[9px] tracking-[0.34em] uppercase mb-2"
+                  style={{ fontFamily: sans }}
+                >
+                  Free Resource
+                </p>
+                <p
+                  className="text-[#555] text-sm"
+                  style={{ fontFamily: sans, fontWeight: 300 }}
+                >
+                  Get the full Mean Reversion Student Guide delivered to your inbox — no cost.
+                </p>
+              </div>
+              <GuideStrip />
+            </div>
+          </AnimateIn>
+
+          <AnimateIn delay={240}>
+            <p
+              className="mt-10 text-center text-[#2A2A2A] text-[10px] tracking-[0.34em] uppercase"
+              style={{ fontFamily: sans }}
+            >
+              ◆&nbsp;&nbsp;Educational Use Only — Not Financial Advice&nbsp;&nbsp;◆
+            </p>
+          </AnimateIn>
+        </div>
       </section>
     </>
   );

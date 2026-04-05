@@ -1,14 +1,11 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith("/admin") && !pathname.startsWith("/admin/login")) {
     const session = request.cookies.get("admin_session")?.value;
-    const validToken = process.env.ADMIN_SESSION_TOKEN;
-
-    if (!session || !validToken || session !== validToken) {
+    if (!session || session !== process.env.ADMIN_SESSION_TOKEN) {
       return NextResponse.redirect(new URL("/admin/login", request.url));
     }
   }

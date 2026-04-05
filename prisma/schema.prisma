@@ -8,61 +8,11 @@ datasource db {
 }
 
 model Lead {
-  id                     String   @id @default(cuid())
-  fullName               String
-  email                  String
-  phone                  String?
-  preferredContactMethod String?
-  message                String?
-  serviceInterest        String?
-  source                 String?
-  status                 String   @default("new")
-  createdAt              DateTime @default(now())
-  updatedAt              DateTime @updatedAt
-}
-
-model ContactMessage {
   id        String   @id @default(cuid())
-  fullName  String
-  email     String
-  phone     String?
-  subject   String?
-  message   String
-  status    String   @default("unread")
+  email     String   @unique
+  source    String?
+  status    String   @default("new")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model BookingRequest {
-  id              String   @id @default(cuid())
-  fullName        String
-  email           String
-  phone           String?
-  preferredDate   String?
-  preferredTime   String?
-  serviceInterest String?
-  message         String?
-  status          String   @default("pending")
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-}
-
-model Testimonial {
-  id        String   @id @default(cuid())
-  name      String
-  role      String?
-  category  String
-  quote     String
-  rating    Int      @default(5)
-  featured  Boolean  @default(false)
-  approved  Boolean  @default(false)
-  createdAt DateTime @default(now())
-}
-
-model AutoReplyLog {
-  id             String   @id @default(cuid())
-  recipientEmail String
-  type           String
-  status         String
-  createdAt      DateTime @default(now())
-}

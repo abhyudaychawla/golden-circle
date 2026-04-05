@@ -5,7 +5,9 @@
       "Bash(ls \"c:\\\\Users\\\\abhyu\\\\golden-circle\\\\.env\"*)",
       "Bash(npx prisma:*)",
       "Bash(node_modules/.bin/prisma --version)",
-      "Bash(node_modules/.bin/prisma generate:*)"
+      "Bash(node_modules/.bin/prisma generate:*)",
+      "Bash(npx dotenv:*)",
+      "mcp__Neon__list_projects"
     ]
   }
 }

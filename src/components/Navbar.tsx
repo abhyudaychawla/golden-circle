@@ -89,7 +89,9 @@ export default function Navbar() {
         {/* CTA */}
         <div className="hidden md:flex items-center">
           <a
-            href="#access"
+            href="https://whop.com/joined/thegoldencircle/"
+            target="_blank"
+            rel="noopener noreferrer"
             className="border border-[#C9A96E] text-[#C9A96E] text-[11px] font-medium tracking-[0.2em] uppercase px-6 py-2.5 hover:bg-[#C9A96E] hover:text-[#0a0a0a] transition-all duration-300"
             style={{ fontFamily: "var(--font-inter), sans-serif" }}
           >
@@ -124,7 +126,9 @@ export default function Navbar() {
             </a>
           ))}
           <a
-            href="#access"
+            href="https://whop.com/joined/thegoldencircle/"
+            target="_blank"
+            rel="noopener noreferrer"
             className="mt-2 border border-[#C9A96E] text-[#C9A96E] text-[11px] tracking-[0.2em] uppercase px-6 py-3 text-center hover:bg-[#C9A96E] hover:text-[#0a0a0a] transition-all duration-300"
             style={{ fontFamily: "var(--font-inter), sans-serif" }}
             onClick={() => setIsMobileOpen(false)}
