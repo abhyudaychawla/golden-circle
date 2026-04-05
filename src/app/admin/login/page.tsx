@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
-export default function AdminLogin() {
+export default function AdminLoginPage() {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -25,51 +25,53 @@ export default function AdminLogin() {
     setLoading(false);
 
     if (res.ok) {
-      router.push("/admin");
-      router.refresh();
+      window.location.href = "/admin";
     } else {
-      setError("Invalid username or password.");
+      setError("Invalid email or password.");
     }
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#0a0a0b] text-white">
-      {/* Background */}
+    <div className="min-h-screen bg-[#0D1521] flex items-center justify-center px-6">
+      {/* Background decoration */}
       <div className="pointer-events-none fixed inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(245,184,65,0.10),transparent_40%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(201,169,110,0.06),transparent_50%)]" />
       </div>
 
-      <div className="relative w-full max-w-sm px-6">
+      <div className="relative w-full max-w-sm">
         {/* Logo */}
         <div className="mb-8 flex flex-col items-center gap-3">
-          <Image
-            src="/TGC_New.jpeg"
-            alt="Golden Circle Logo"
-            width={52}
-            height={52}
-            className="h-13 w-13 rounded-full border border-white/10 object-cover"
-          />
+          <div className="w-12 h-12 relative">
+            <svg viewBox="0 0 48 48" fill="none" className="w-12 h-12">
+              <circle cx="24" cy="24" r="22" stroke="#C9A96E" strokeWidth="1" fill="none" opacity="0.5" />
+              <circle cx="24" cy="24" r="14" stroke="#C9A96E" strokeWidth="1" fill="none" />
+              <circle cx="24" cy="24" r="3" fill="#C9A96E" />
+            </svg>
+          </div>
           <div className="text-center">
-            <div className="text-base font-semibold tracking-[0.02em] text-white">
+            <p
+              className="text-[#C9A96E] text-xl font-light"
+              style={{ fontFamily: "var(--font-cormorant-garamond), Georgia, serif" }}
+            >
               Golden Circle
-            </div>
-            <div className="text-[11px] uppercase tracking-[0.2em] text-[#f5b841]">
-              Admin Access
-            </div>
+            </p>
+            <p className="text-[#8A95A5] text-xs tracking-widest uppercase mt-1">Admin Access</p>
           </div>
         </div>
 
         {/* Card */}
-        <div className="rounded-[24px] border border-white/8 bg-white/[0.03] p-6 shadow-[0_0_80px_rgba(0,0,0,0.4)]">
-          <h1 className="mb-1 text-xl font-semibold text-white">Sign in</h1>
-          <p className="mb-6 text-sm text-zinc-500">
-            Restricted to authorised admins only.
-          </p>
+        <div className="bg-[#1B2A4A]/40 border border-[#C9A96E]/20 rounded-2xl p-8 shadow-[0_20px_60px_rgba(0,0,0,0.3)]">
+          <h1
+            className="text-white text-2xl font-light mb-1"
+            style={{ fontFamily: "var(--font-cormorant-garamond), Georgia, serif" }}
+          >
+            Sign In
+          </h1>
+          <p className="text-[#8A95A5] text-sm mb-6">Restricted to authorised admins only.</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="mb-1.5 block text-xs font-medium uppercase tracking-[0.14em] text-zinc-500">
+              <label className="block text-[#8A95A5] text-xs uppercase tracking-widest mb-1.5">
                 Username
               </label>
               <input
@@ -78,13 +80,13 @@ export default function AdminLogin() {
                 onChange={(e) => setUsername(e.target.value)}
                 required
                 autoComplete="username"
-                className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white placeholder-zinc-600 outline-none transition focus:border-[#f5b841]/40 focus:ring-1 focus:ring-[#f5b841]/20"
-                placeholder="Enter username"
+                placeholder="username"
+                className="w-full bg-[#1B2A4A] border border-[#C9A96E]/20 rounded-xl px-4 py-3 text-white text-sm placeholder-[#8A95A5]/50 focus:outline-none focus:border-[#C9A96E]/50 transition-colors"
               />
             </div>
 
             <div>
-              <label className="mb-1.5 block text-xs font-medium uppercase tracking-[0.14em] text-zinc-500">
+              <label className="block text-[#8A95A5] text-xs uppercase tracking-widest mb-1.5">
                 Password
               </label>
               <input
@@ -93,13 +95,13 @@ export default function AdminLogin() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 autoComplete="current-password"
-                className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white placeholder-zinc-600 outline-none transition focus:border-[#f5b841]/40 focus:ring-1 focus:ring-[#f5b841]/20"
-                placeholder="Enter password"
+                placeholder="••••••••"
+                className="w-full bg-[#1B2A4A] border border-[#C9A96E]/20 rounded-xl px-4 py-3 text-white text-sm placeholder-[#8A95A5]/50 focus:outline-none focus:border-[#C9A96E]/50 transition-colors"
               />
             </div>
 
             {error && (
-              <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-2.5 text-sm text-red-400">
+              <div className="bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-2.5 text-red-400 text-sm">
                 {error}
               </div>
             )}
@@ -107,13 +109,22 @@ export default function AdminLogin() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-xl bg-[#f5b841] py-2.5 text-sm font-semibold text-black transition hover:bg-[#ffd166] disabled:opacity-50"
+              className="w-full bg-[#C9A96E] text-[#1B2A4A] font-medium py-3 rounded-xl hover:bg-white transition-colors disabled:opacity-50 text-sm"
             >
-              {loading ? "Signing in…" : "Sign in"}
+              {loading ? "Signing in..." : "Sign In"}
             </button>
           </form>
         </div>
+
+        <div className="mt-6 text-center">
+          <Link
+            href="/"
+            className="text-[#8A95A5] text-sm hover:text-[#C9A96E] transition-colors"
+          >
+            ← Back to website
+          </Link>
+        </div>
       </div>
-    </main>
+    </div>
   );
 }

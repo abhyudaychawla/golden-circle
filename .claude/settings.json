@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Neon__run_sql_transaction",
+      "Bash(ls \"c:\\\\Users\\\\abhyu\\\\golden-circle\\\\.env\"*)",
+      "Bash(npx prisma:*)",
+      "Bash(node_modules/.bin/prisma --version)",
+      "Bash(node_modules/.bin/prisma generate:*)"
+    ]
+  }
+}

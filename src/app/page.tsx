@@ -1,575 +1,476 @@
-import Image from "next/image";
-import fs from "fs";
-import path from "path";
-import { getActiveSession } from "@/lib/marketSession";
-import { LivePrice } from "@/components/LivePrice";
+import AnimateIn from "@/components/AnimateIn";
+import LeadForm from "@/components/LeadForm";
 
-const DISCORD_LINK = "https://discord.gg/NcwvUeHN";
-const INSTAGRAM_LINK =
-  "https://www.instagram.com/thegoldencircleig?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==";
-const WHOP_LINK = "https://whop.com/joined/thegoldencircle/";
+const serif = "var(--font-cormorant-garamond)";
+const sans = "var(--font-inter)";
 
-const features = [
-  {
-    title: "Session Structure",
-    text: "Know exactly when to trade and where volatility is most likely to appear.",
-  },
-  {
-    title: "Risk Checklist",
-    text: "A fixed pre-trade process designed to reduce emotional decisions.",
-  },
-  {
-    title: "Recaps + Journaling",
-    text: "Review trades, tighten execution, and improve with consistency.",
-  },
-];
+/* ─── DATA ───────────────────────────────────────────────────────── */
 
 const stats = [
-  { label: "Win Rate", value: "72%" },
-  { label: "Risk / Reward", value: "1:3.2" },
-  { label: "Trades / Week", value: "5–8" },
-  { label: "Avg. Monthly Growth", value: "+18.4%" },
+  { value: "2,185", label: "Sessions Analysed" },
+  { value: "9.0",   label: "Years of NQ Data" },
+  { value: "87.6%", label: "TP Rate – Aligned" },
+  { value: "+5.2R", label: "Expectancy / Trade" },
+  { value: "7.0",   label: "Course Modules" },
 ];
 
-const testimonials = [
+const whyCards = [
   {
-    name: "Alex M.",
-    quote: "The structure changed how I trade gold. I stopped forcing setups.",
+    num: "01",
+    title: "A Time-Defined Range",
+    body: "No MR window. No overnight levels. No map for the day. Most traders enter sessions completely blind to the institutional delivery framework.",
   },
   {
-    name: "Jordan K.",
-    quote: "The risk rules alone saved my account from overtrading.",
+    num: "02",
+    title: "A Validated Filter Stack",
+    body: "Cycle bias alone shifts TP rate by 48 percentage points. Without it, you're flipping coins with professional-sized positions.",
   },
   {
-    name: "Marcus T.",
-    quote: "It feels like a framework, not random callouts.",
+    num: "03",
+    title: "9 Years of Research",
+    body: "2,185 sessions. Every variable tested across bull, bear, crash, and recovery markets — no cherry-picking, no theory.",
   },
 ];
 
-type MarketData = {
-  bias: string;
-  checklist: string;
-  riskState: string;
-  notes: string;
-  featuredPost: string;
-};
+const modules = [
+  { num: "01", category: "Foundation",       title: "The MR Range",         body: "The 1:30–6AM overnight window that generates every setup. Institutional delivery, range boundaries, quality filter." },
+  { num: "02", category: "Primary Pattern",  title: "Sweep CSD",             body: "Change in State of Delivery via boundary sweep. The primary entry pattern. Two paths: body close (A) and wick confirmation (B)." },
+  { num: "03", category: "Advanced Pattern", title: "EQ Rejection",          body: "Midpoint rejection — the highest R:R setup in the system. +5.28R expectancy vs +1.46R for standard sweeps." },
+  { num: "04", category: "Edge Definition",  title: "The Filter Stack",      body: "Five sequenced filters: Cycle Bias → Range Size → FGV → Narrative → Time. Each eliminates a different class of losing trade." },
+  { num: "05", category: "Execution",        title: "Entry & Exit",          body: "The 3-phase arm process. Stop loss at wick extreme. TP ladder: EQ → 1:30 open → opposite boundary." },
+  { num: "06", category: "Proof",            title: "9-Year Statistics",     body: "2,185 NQ sessions. Every filter validated with real numbers — not theory. Year-by-year consistency across every market regime." },
+  { num: "07", category: "Routine",          title: "Checklist & Mistakes",  body: "Pre-market routine, live entry checklist, and the 7 most common mistakes students make when learning this system." },
+];
 
-type Alert = {
-  id: string;
-  pair: string;
-  direction: string;
-  entry: string;
-  sl: string;
-  tp: string;
-  time: string;
-  status: string;
-};
+/* ─── HELPERS ────────────────────────────────────────────────────── */
 
-function readMarketData(): MarketData {
-  try {
-    return JSON.parse(
-      fs.readFileSync(path.join(process.cwd(), "src/data/market.json"), "utf-8")
-    );
-  } catch {
-    return { bias: "Bullish", checklist: "–", riskState: "Controlled", notes: "", featuredPost: "" };
-  }
-}
-
-function readAlerts(): Alert[] {
-  try {
-    return JSON.parse(
-      fs.readFileSync(path.join(process.cwd(), "src/data/alerts.json"), "utf-8")
-    );
-  } catch {
-    return [];
-  }
-}
-
-export default function Home() {
-  const market = readMarketData();
-  const alerts = readAlerts();
-  const session = getActiveSession();
-  const isBullish = market.bias === "Bullish";
-  const isBearish = market.bias === "Bearish";
-  const activeAlert = alerts.find((a) => a.status === "active") ?? null;
-  const recentAlerts = alerts.slice(0, 3);
-
+function SectionLabel({ text }: { text: string }) {
   return (
-    <main className="min-h-screen bg-[#0a0a0b] text-white">
-      {/* Background */}
-      <div className="pointer-events-none fixed inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(245,184,65,0.12),transparent_35%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:64px_64px]" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(10,10,11,0.3),rgba(10,10,11,0.92)_30%,rgba(10,10,11,1))]" />
-      </div>
+    <div className="flex items-center gap-4">
+      <span className="h-px w-8 bg-[#C9A96E]/40" />
+      <span
+        className="text-[#C9A96E] text-[10px] tracking-[0.36em] uppercase"
+        style={{ fontFamily: sans }}
+      >
+        {text}
+      </span>
+      <span className="h-px w-8 bg-[#C9A96E]/40" />
+    </div>
+  );
+}
 
-      {/* Nav */}
-      <header className="sticky top-0 z-30 border-b border-white/5 bg-[#0a0a0b]/80 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 md:px-8">
-          <div className="flex items-center gap-3">
-            <Image
-              src="/TGC_New.jpeg"
-              alt="Golden Circle Logo"
-              width={42}
-              height={42}
-              className="h-10 w-10 rounded-full border border-white/10 object-cover"
-            />
-            <div>
-              <div className="text-sm font-semibold tracking-[0.02em] text-white">Golden Circle</div>
-              <div className="text-[11px] uppercase tracking-[0.2em] text-zinc-500">El Dorado</div>
-            </div>
-          </div>
+function GoldDivider() {
+  return (
+    <div className="h-px bg-gradient-to-r from-transparent via-[#C9A96E]/35 to-transparent" />
+  );
+}
 
-          <nav className="hidden items-center gap-8 text-sm text-zinc-400 md:flex">
-            <a href="#strategy" className="transition hover:text-white">Strategy</a>
-            <a href="#alerts" className="transition hover:text-white">Alerts</a>
-            <a href="#framework" className="transition hover:text-white">Framework</a>
-            <a href="#community" className="transition hover:text-white">Community</a>
-            <a href="#join" className="transition hover:text-white">Join</a>
-          </nav>
+/* ─── PAGE ───────────────────────────────────────────────────────── */
 
-          <div className="hidden items-center gap-3 md:flex">
-            <a
-              href={INSTAGRAM_LINK}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2 text-sm font-medium text-zinc-300 transition hover:border-white/20 hover:bg-white/[0.06] hover:text-white"
-            >
-              Instagram
-            </a>
-            <a
-              href={WHOP_LINK}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-xl bg-[#f5b841] px-5 py-2 text-sm font-semibold text-black transition hover:bg-[#ffd166]"
-            >
-              Join The Golden Circle
-            </a>
-          </div>
+export default function HomePage() {
+  return (
+    <>
+      {/* ══ HERO ══════════════════════════════════════════════════════ */}
+      <section
+        id="overview"
+        className="relative min-h-screen flex flex-col items-center justify-center text-center
+                   px-6 pt-32 pb-24 overflow-hidden bg-[#0a0a0a]"
+      >
+        {/* Radial ambient glow */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+        >
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2
+                          w-[800px] h-[500px] rounded-full
+                          bg-[#C9A96E]/[0.05] blur-[140px]" />
         </div>
-      </header>
 
-      <div className="relative mx-auto max-w-7xl px-6 pb-20 pt-6 md:px-8">
+        {/* Scattered star dots */}
+        {(
+          [[8,18],[90,12],[4,58],[95,50],[22,82],[80,75],[50,6],[30,92],[68,88],[14,42],[72,30],[42,70]] as [number,number][]
+        ).map(([x, y], i) => (
+          <div
+            key={i}
+            aria-hidden
+            className="pointer-events-none absolute w-px h-px rounded-full bg-[#C9A96E]"
+            style={{ left: `${x}%`, top: `${y}%`, opacity: 0.2 + (i % 4) * 0.08 }}
+          />
+        ))}
 
-        {/* ── HERO ── */}
-        <section id="strategy" className="py-16 md:py-24">
+        {/* Top gold hairline */}
+        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#C9A96E]/40 to-transparent" />
 
-          {/* Live alert banner */}
-          {activeAlert && (
-            <div className="mb-8 flex flex-col gap-3 rounded-2xl border border-[#f5b841]/25 bg-[#f5b841]/5 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-center gap-3">
-                <span className="flex h-2 w-2 rounded-full bg-[#f5b841] shadow-[0_0_8px_rgba(245,184,65,0.8)]" />
-                <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#f5b841]">Live Alert</span>
-                <span className="text-sm font-semibold text-white">
-                  {activeAlert.pair}{" "}
-                  <span className={activeAlert.direction === "Long" ? "text-emerald-400" : "text-red-400"}>
-                    {activeAlert.direction}
-                  </span>
-                </span>
-              </div>
-              <div className="flex items-center gap-5 text-sm">
-                <div>
-                  <span className="text-zinc-500 text-xs uppercase tracking-wider mr-1.5">Entry</span>
-                  <span className="text-zinc-200">{activeAlert.entry}</span>
-                </div>
-                <div>
-                  <span className="text-zinc-500 text-xs uppercase tracking-wider mr-1.5">SL</span>
-                  <span className="text-red-400">{activeAlert.sl}</span>
-                </div>
-                <div>
-                  <span className="text-zinc-500 text-xs uppercase tracking-wider mr-1.5">TP</span>
-                  <span className="text-emerald-400">{activeAlert.tp}</span>
-                </div>
-              </div>
-            </div>
-          )}
+        <div className="relative z-10 max-w-5xl mx-auto w-full">
+          {/* Overline — staggered hero animation */}
+          <p
+            className="animate-fade-in delay-100 text-[#C9A96E]/60 text-[10px] tracking-[0.42em] uppercase mb-10"
+            style={{ fontFamily: sans }}
+          >
+            TCM Mean Reversion&nbsp;&nbsp;·&nbsp;&nbsp;Complete Student Guide
+          </p>
 
-          <div className="grid gap-12 md:grid-cols-[1.05fr_0.95fr] md:items-center">
-            {/* Left — copy */}
-            <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#f5b841]/20 bg-[#f5b841]/5 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-[#f5b841]">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#f5b841]" />
-                The Strategy Behind
-              </div>
-
-              <h1 className="mt-5 text-5xl font-semibold tracking-tight text-white md:text-7xl">
-                The <span className="text-[#f5b841]">Golden Circle</span>
-              </h1>
-
-              <p className="mt-6 max-w-xl text-base leading-8 text-zinc-400 md:text-lg">
-                A battle-tested framework for trading gold with structure, discipline, and accountability. Built to help traders remove guesswork and execute with consistency.
-              </p>
-
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <a
-                  href={WHOP_LINK}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center justify-center rounded-2xl bg-[#f5b841] px-6 py-3 text-sm font-semibold text-black shadow-[0_0_30px_rgba(245,184,65,0.18)] transition hover:bg-[#ffd166]"
-                >
-                  Join via Whop
-                </a>
-                <a
-                  href={DISCORD_LINK}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-zinc-200 transition hover:border-white/20 hover:bg-white/[0.06] hover:text-white"
-                >
-                  Join Discord
-                </a>
-              </div>
-
-              <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-4">
-                {stats.map((stat) => (
-                  <div key={stat.label} className="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
-                    <div className="text-[11px] uppercase tracking-[0.16em] text-zinc-500">{stat.label}</div>
-                    <div className="mt-2 text-2xl font-semibold text-white">{stat.value}</div>
-                  </div>
-                ))}
-              </div>
-
-              <p className="mt-6 text-xs text-zinc-600">
-                Educational content only. Trading involves risk. Not financial advice.
-              </p>
-            </div>
-
-            {/* Right — terminal */}
-            <div className="relative mt-8 md:mt-0">
-              <div className="absolute inset-0 rounded-[28px] bg-[radial-gradient(circle_at_center,rgba(245,184,65,0.16),transparent_65%)] blur-2xl" />
-
-              <div className="relative rounded-[28px] border border-[#f5b841]/20 bg-[#111113] p-4 shadow-[0_0_0_1px_rgba(255,255,255,0.03),0_20px_80px_rgba(0,0,0,0.55)]">
-                <div className="rounded-[20px] border border-white/8 bg-[#0d0d0f] p-5">
-
-                  {/* Terminal header */}
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-[10px] uppercase tracking-[0.18em] text-zinc-500">El Dorado Terminal</div>
-                      <div className="mt-1 flex items-center gap-2">
-                        <span className="text-sm font-semibold text-white">XAUUSD</span>
-                        <span className="text-zinc-600">·</span>
-                        <span className="text-sm font-semibold text-[#f5b841]"><LivePrice /></span>
-                      </div>
-                    </div>
-                    <div className={`rounded-full border px-3 py-1 text-xs font-medium ${
-                      isBullish ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-300"
-                      : isBearish ? "border-red-500/20 bg-red-500/10 text-red-400"
-                      : "border-white/10 bg-white/[0.04] text-zinc-400"
-                    }`}>
-                      Bias: {market.bias}
-                    </div>
-                  </div>
-
-                  {/* Chart */}
-                  <div className="mt-4 overflow-hidden rounded-2xl border border-white/8 bg-[#09090b] p-4">
-                    <div className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-[0.14em] text-zinc-600">
-                      <span>Market Structure</span>
-                      <span className="flex items-center gap-1.5">
-                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                        Live
-                      </span>
-                    </div>
-
-                    <div className="relative h-44 rounded-xl border border-white/5 bg-[linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:32px_32px]">
-                      <svg viewBox="0 0 600 180" className="absolute inset-0 h-full w-full" fill="none">
-                        <defs>
-                          <linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stopColor="#f5b841" stopOpacity="0.15" />
-                            <stop offset="100%" stopColor="#f5b841" stopOpacity="0" />
-                          </linearGradient>
-                        </defs>
-                        <path
-                          d="M20 130 L70 115 L120 128 L180 85 L230 95 L280 60 L335 72 L390 45 L455 58 L515 28 L580 38"
-                          stroke="#f5b841"
-                          strokeWidth="2.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M20 130 L70 115 L120 128 L180 85 L230 95 L280 60 L335 72 L390 45 L455 58 L515 28 L580 38 L580 180 L20 180 Z"
-                          fill="url(#chartFill)"
-                        />
-                        <rect x="360" y="28" width="110" height="75" rx="8" fill="rgba(245,184,65,0.06)" stroke="rgba(245,184,65,0.28)" strokeDasharray="4 3" />
-                        <text x="368" y="46" fontSize="8" fill="rgba(245,184,65,0.6)" fontFamily="monospace">Premium Zone</text>
-                      </svg>
-                    </div>
-
-                    {/* 3 stat pills */}
-                    <div className="mt-3 grid grid-cols-3 gap-2">
-                      <div className="rounded-xl border border-white/8 bg-white/[0.03] p-2.5">
-                        <div className="text-[10px] uppercase tracking-[0.12em] text-zinc-600">Session</div>
-                        <div className="mt-1 text-xs font-medium text-white leading-tight">{session}</div>
-                      </div>
-                      <div className="rounded-xl border border-white/8 bg-white/[0.03] p-2.5">
-                        <div className="text-[10px] uppercase tracking-[0.12em] text-zinc-600">Checklist</div>
-                        <div className="mt-1 text-xs font-medium text-white leading-tight">{market.checklist}</div>
-                      </div>
-                      <div className="rounded-xl border border-white/8 bg-white/[0.03] p-2.5">
-                        <div className="text-[10px] uppercase tracking-[0.12em] text-zinc-600">Risk</div>
-                        <div className={`mt-1 text-xs font-medium leading-tight ${
-                          market.riskState === "Controlled" ? "text-emerald-300"
-                          : market.riskState === "Elevated" ? "text-[#f5b841]"
-                          : "text-red-400"
-                        }`}>{market.riskState}</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Floating cards */}
-              <div className="absolute -bottom-4 -left-4 hidden w-40 rounded-2xl border border-white/10 bg-[#111113]/95 p-4 shadow-2xl backdrop-blur md:block">
-                <div className="text-[10px] uppercase tracking-[0.16em] text-zinc-500">R:R Minimum</div>
-                <div className="mt-1.5 text-2xl font-semibold text-white">1:3.2</div>
-                <div className="mt-0.5 text-xs text-zinc-500">Framework target</div>
-              </div>
-
-              <div className="absolute -right-4 top-8 hidden w-44 rounded-2xl border border-[#f5b841]/20 bg-[#121214]/95 p-4 shadow-2xl backdrop-blur md:block">
-                <div className="text-[10px] uppercase tracking-[0.16em] text-zinc-500">Win Rate</div>
-                <div className="mt-1.5 text-2xl font-semibold text-[#f5b841]">72%</div>
-                <div className="mt-0.5 text-xs text-zinc-500">Rules-based execution</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── LIVE ALERTS ── */}
-        {recentAlerts.length > 0 && (
-          <section id="alerts" className="py-16 md:py-20">
-            <div className="mb-8 flex items-end justify-between">
-              <div>
-                <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-[#f5b841]/20 bg-[#f5b841]/5 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-[#f5b841]">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#f5b841]" />
-                  Trade Alerts
-                </div>
-                <h2 className="text-3xl font-semibold tracking-tight text-white md:text-4xl">
-                  Latest <span className="text-[#f5b841]">Callouts</span>
-                </h2>
-              </div>
-              <a
-                href={WHOP_LINK}
-                target="_blank"
-                rel="noreferrer"
-                className="hidden text-xs text-zinc-500 transition hover:text-white md:block"
+          {/* Title block */}
+          <div className="animate-fade-up delay-200">
+            <h1
+              className="text-white leading-[0.9]"
+              style={{ fontFamily: serif, fontWeight: 600 }}
+            >
+              <span className="block text-[clamp(3.2rem,11vw,8.5rem)]">
+                TGC El Dorado
+              </span>
+              <span
+                className="block text-[clamp(2.6rem,8.5vw,6.5rem)] italic"
+                style={{ fontWeight: 400, color: "#C9A96E" }}
               >
-                Join for full access →
-              </a>
-            </div>
-
-            <div className="grid gap-4 md:grid-cols-3">
-              {recentAlerts.map((alert) => (
-                <div
-                  key={alert.id}
-                  className={`rounded-[22px] border p-5 ${
-                    alert.status === "active"
-                      ? "border-[#f5b841]/20 bg-[#f5b841]/5"
-                      : "border-white/8 bg-white/[0.03]"
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold ${
-                        alert.direction === "Long"
-                          ? "border border-emerald-500/25 bg-emerald-500/10 text-emerald-300"
-                          : "border border-red-500/25 bg-red-500/10 text-red-400"
-                      }`}>
-                        {alert.direction === "Long" ? "▲" : "▼"}
-                      </div>
-                      <div>
-                        <span className="text-sm font-semibold text-white">{alert.pair}</span>
-                        <span className={`ml-1.5 text-sm font-semibold ${alert.direction === "Long" ? "text-emerald-400" : "text-red-400"}`}>
-                          {alert.direction}
-                        </span>
-                      </div>
-                    </div>
-                    <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
-                      alert.status === "active"
-                        ? "border border-[#f5b841]/25 bg-[#f5b841]/10 text-[#f5b841]"
-                        : "border border-white/8 text-zinc-600"
-                    }`}>
-                      {alert.status}
-                    </span>
-                  </div>
-
-                  <div className="mt-4 grid grid-cols-3 gap-2 rounded-xl border border-white/6 bg-black/20 p-3">
-                    <div className="text-center">
-                      <div className="text-[10px] uppercase tracking-wider text-zinc-600">Entry</div>
-                      <div className="mt-1 text-sm font-semibold text-zinc-200">{alert.entry}</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-[10px] uppercase tracking-wider text-zinc-600">SL</div>
-                      <div className="mt-1 text-sm font-semibold text-red-400">{alert.sl}</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-[10px] uppercase tracking-wider text-zinc-600">TP</div>
-                      <div className="mt-1 text-sm font-semibold text-emerald-400">{alert.tp}</div>
-                    </div>
-                  </div>
-
-                  <div className="mt-3 text-xs text-zinc-600">
-                    {new Date(alert.time).toLocaleString("en-US", {
-                      month: "short", day: "numeric", hour: "numeric", minute: "2-digit",
-                    })}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* ── FRAMEWORK ── */}
-        <section id="framework" className="py-16 md:py-24">
-          <div className="max-w-2xl">
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-[#f5b841]/20 bg-[#f5b841]/5 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-[#f5b841]">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#f5b841]" />
-              Framework
-            </div>
-            <h2 className="text-3xl font-semibold tracking-tight text-white md:text-5xl">
-              A serious process for{" "}
-              <span className="text-[#f5b841]">serious traders</span>
-            </h2>
-            <p className="mt-4 max-w-xl text-sm leading-7 text-zinc-400 md:text-base">
-              Everything inside the Golden Circle is designed around repeatability, not hype. The goal is to create structure before execution.
-            </p>
+                Mean Reversion System
+              </span>
+            </h1>
           </div>
 
-          <div className="mt-10 grid gap-5 md:grid-cols-3">
-            {features.map((item) => (
-              <div
-                key={item.title}
-                className="group rounded-[24px] border border-white/8 bg-white/[0.03] p-6 transition hover:border-[#f5b841]/25 hover:bg-white/[0.04]"
+          {/* Decorative rule */}
+          <div className="animate-fade-in delay-400 flex items-center justify-center gap-3 my-10">
+            <span className="h-px w-14 bg-[#C9A96E]/35" />
+            <span className="text-[#C9A96E]/50 text-sm">◆</span>
+            <span className="h-px w-14 bg-[#C9A96E]/35" />
+          </div>
+
+          {/* Sub caption */}
+          <p
+            className="animate-fade-in delay-400 text-[#5A5A5A] text-[10px] tracking-[0.32em] uppercase mb-8"
+            style={{ fontFamily: sans }}
+          >
+            From MR Range to Live Entry&nbsp;·&nbsp;All Concepts Explained&nbsp;·&nbsp;Backed by 9 Years of Data
+          </p>
+
+          {/* Asset pills */}
+          <div className="animate-fade-up delay-500 flex flex-wrap justify-center gap-3 mb-14">
+            {["NQ  Nasdaq Futures", "GC  Gold Futures", "ES  S&P 500 Futures"].map((pill) => (
+              <span
+                key={pill}
+                className="border border-[#2A2A2A] text-[#666] text-[10px] tracking-[0.24em] uppercase
+                           px-5 py-2.5 transition-colors duration-300 hover:border-[#C9A96E]/40 hover:text-[#C9A96E]"
+                style={{ fontFamily: sans }}
               >
-                <div className="flex h-11 w-11 items-center justify-center rounded-full border border-[#f5b841]/25 bg-[#f5b841]/10 text-[#f5b841]">●</div>
-                <h3 className="mt-5 text-xl font-semibold text-white">{item.title}</h3>
-                <p className="mt-3 text-sm leading-7 text-zinc-400">{item.text}</p>
-              </div>
+                {pill}
+              </span>
             ))}
           </div>
-        </section>
 
-        {/* ── COMMUNITY ── */}
-        <section id="community" className="py-16 md:py-24">
-          <div className="grid gap-8 md:grid-cols-[0.9fr_1.1fr] md:items-start">
-            <div>
-              <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-[#f5b841]/20 bg-[#f5b841]/5 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-[#f5b841]">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#f5b841]" />
-                Community
-              </div>
-              <h2 className="text-3xl font-semibold tracking-tight text-white md:text-5xl">
-                Trade with a community{" "}
-                <span className="text-[#f5b841]">of disciplined traders</span>
-              </h2>
-              <p className="mt-4 max-w-xl text-sm leading-7 text-zinc-400 md:text-base">
-                Inside the Golden Circle you get accountability, insights, and real feedback from traders focused on gold.
-              </p>
-
-              <div className="mt-8 flex flex-wrap gap-2 text-xs text-zinc-500">
-                {["XAUUSD", "GC", "Structure", "Risk Rules", "Recaps"].map((tag) => (
-                  <span key={tag} className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1">{tag}</span>
-                ))}
-              </div>
-            </div>
-
-            <div className="grid gap-4 md:grid-cols-3">
-              {testimonials.map((item) => (
-                <div key={item.name} className="rounded-[22px] border border-white/8 bg-white/[0.03] p-5">
-                  <div className="text-sm font-semibold text-white">{item.name}</div>
-                  <p className="mt-4 text-sm leading-7 text-zinc-400">"{item.quote}"</p>
-                </div>
-              ))}
-            </div>
+          {/* CTAs */}
+          <div className="animate-fade-up delay-600 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a
+              href="#access"
+              className="bg-[#C9A96E] text-[#0a0a0a] text-[11px] font-medium tracking-[0.24em] uppercase
+                         px-10 py-4 hover:bg-white transition-colors duration-300"
+              style={{ fontFamily: sans }}
+            >
+              Get Free Access →
+            </a>
+            <a
+              href="#modules"
+              className="border border-[#2E2E2E] text-[#888] text-[11px] tracking-[0.24em] uppercase
+                         px-10 py-4 hover:border-[#C9A96E]/50 hover:text-white transition-all duration-300"
+              style={{ fontFamily: sans }}
+            >
+              View Modules
+            </a>
           </div>
-        </section>
 
-        {/* ── INSTAGRAM ── */}
-        {market.featuredPost ? (
-          <section className="py-16 md:py-20">
-            <div className="flex flex-col gap-8 rounded-[28px] border border-white/8 bg-white/[0.02] p-8 md:flex-row md:items-center md:p-10">
-              <div className="flex-1">
-                <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-[#f5b841]/20 bg-[#f5b841]/5 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-[#f5b841]">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#f5b841]" />
-                  Latest Post
-                </div>
-                <h2 className="text-2xl font-semibold tracking-tight text-white md:text-3xl">
-                  Follow <span className="text-[#f5b841]">@thegoldencircleig</span>
-                </h2>
-                <p className="mt-3 max-w-sm text-sm leading-7 text-zinc-400">
-                  Daily market insights, trade recaps, and community highlights on Instagram.
-                </p>
-                <a
-                  href={market.featuredPost}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-5 inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-zinc-200 transition hover:border-white/20 hover:bg-white/[0.06]"
+          {/* Scroll indicator */}
+          <div className="animate-fade-in delay-800 mt-20 flex flex-col items-center gap-2 opacity-30">
+            <span className="text-[#C9A96E] text-[9px] tracking-[0.3em] uppercase" style={{ fontFamily: sans }}>
+              Scroll
+            </span>
+            <div className="h-8 w-px bg-gradient-to-b from-[#C9A96E] to-transparent" />
+          </div>
+        </div>
+      </section>
+
+      <GoldDivider />
+
+      {/* ══ STATS BAR ════════════════════════════════════════════════ */}
+      <section id="statistics" className="bg-[#0d0d0d] py-14 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 divide-x divide-[#1C1C1C]">
+            {stats.map((s, i) => (
+              <AnimateIn key={s.label} delay={i * 80} className="px-6 py-4 text-center">
+                <p
+                  className="text-[#C9A96E] text-[clamp(2.2rem,5vw,3.5rem)] font-light leading-none mb-2"
+                  style={{ fontFamily: serif }}
                 >
-                  View on Instagram →
-                </a>
-              </div>
+                  {s.value}
+                </p>
+                <p
+                  className="text-[#484848] text-[9px] tracking-[0.28em] uppercase"
+                  style={{ fontFamily: sans }}
+                >
+                  {s.label}
+                </p>
+              </AnimateIn>
+            ))}
+          </div>
+        </div>
+      </section>
 
-              <a
-                href={market.featuredPost}
-                target="_blank"
-                rel="noreferrer"
-                className="flex w-full max-w-[240px] flex-col overflow-hidden rounded-[20px] border border-white/10 bg-[#111113] transition hover:border-[#f5b841]/30"
+      <GoldDivider />
+
+      {/* ══ WHY IT MATTERS ═══════════════════════════════════════════ */}
+      <section className="bg-[#0a0a0a] py-28 px-6">
+        <div className="max-w-6xl mx-auto">
+          <AnimateIn>
+            <div className="mb-14">
+              <SectionLabel text="Why It Matters." />
+              <h2
+                className="mt-8 text-white text-[clamp(2.2rem,5vw,4.2rem)] leading-[1.06] max-w-2xl"
+                style={{ fontFamily: serif, fontWeight: 600 }}
               >
-                <div className="flex items-center gap-2.5 border-b border-white/5 px-4 py-3">
-                  <Image src="/TGC_New.jpeg" alt="TGC" width={24} height={24} className="h-6 w-6 rounded-full object-cover" />
-                  <span className="text-xs font-medium text-zinc-300">thegoldencircleig</span>
-                </div>
-                <div className="flex flex-col items-center justify-center py-8 text-center">
-                  <div className="text-2xl">📸</div>
-                  <div className="mt-2 text-sm font-medium text-zinc-300">View Post</div>
-                  <div className="mt-0.5 text-xs text-zinc-600">Tap to open Instagram</div>
-                </div>
-              </a>
+                What everyone else{" "}
+                <br className="hidden md:block" />
+                is trading{" "}
+                <em className="italic" style={{ color: "#C9A96E", fontWeight: 400 }}>
+                  without.
+                </em>
+              </h2>
             </div>
-          </section>
-        ) : null}
+          </AnimateIn>
 
-        {/* ── CTA ── */}
-        <section id="join" className="py-16 md:py-24">
-          <div className="rounded-[32px] border border-[#f5b841]/15 bg-[linear-gradient(180deg,rgba(245,184,65,0.06),rgba(255,255,255,0.02))] p-8 md:p-12">
-            <div className="grid gap-8 md:grid-cols-[1fr_auto] md:items-center">
-              <div>
-                <div className="text-[11px] uppercase tracking-[0.18em] text-[#f5b841]">Ready To Join</div>
-                <h3 className="mt-3 text-3xl font-semibold tracking-tight text-white md:text-5xl">
-                  Build a more structured approach to trading gold.
-                </h3>
-                <p className="mt-4 max-w-2xl text-sm leading-7 text-zinc-400 md:text-base">
-                  Join the Golden Circle for structure, risk rules, trade reviews, and a community focused on execution instead of impulse.
+          <div className="grid grid-cols-1 md:grid-cols-3 border-t border-[#1A1A1A]">
+            {whyCards.map((card, i) => (
+              <AnimateIn key={card.num} delay={i * 120} className="block">
+                <div
+                  className="group border-b md:border-b-0 md:border-r border-[#1A1A1A] last:border-r-0
+                             p-10 relative overflow-hidden
+                             transition-colors duration-300 hover:bg-[#0e0e0e]"
+                >
+                  {/* Hover gold top bar */}
+                  <div className="absolute top-0 left-0 right-0 h-px bg-[#C9A96E]/0
+                                  group-hover:bg-[#C9A96E]/40 transition-colors duration-500" />
+                  <p
+                    className="text-[#C9A96E]/15 text-[5rem] font-light leading-none mb-8 select-none
+                               group-hover:text-[#C9A96E]/25 transition-colors duration-300"
+                    style={{ fontFamily: serif }}
+                  >
+                    {card.num}
+                  </p>
+                  <h3
+                    className="text-white text-xl mb-4"
+                    style={{ fontFamily: serif, fontWeight: 600 }}
+                  >
+                    {card.title}
+                  </h3>
+                  <p
+                    className="text-[#4E4E4E] text-sm leading-relaxed
+                               group-hover:text-[#666] transition-colors duration-300"
+                    style={{ fontFamily: sans, fontWeight: 300 }}
+                  >
+                    {card.body}
+                  </p>
+                </div>
+              </AnimateIn>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <GoldDivider />
+
+      {/* ══ EVIDENCE ═════════════════════════════════════════════════ */}
+      <section className="bg-[#0d0d0d] py-28 px-6">
+        <div className="max-w-6xl mx-auto">
+          <AnimateIn>
+            <div className="mb-14">
+              <SectionLabel text="The Evidence" />
+              <h2
+                className="mt-8 text-white text-[clamp(2.2rem,5vw,4.2rem)] leading-[1.06]"
+                style={{ fontFamily: serif, fontWeight: 600 }}
+              >
+                One filter.{" "}
+                <br />
+                <em className="italic" style={{ color: "#C9A96E", fontWeight: 400 }}>
+                  48 percentage points.
+                </em>
+              </h2>
+            </div>
+          </AnimateIn>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 relative">
+            {/* VS badge */}
+            <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10
+                            w-10 h-10 items-center justify-center bg-[#0d0d0d] border border-[#282828]">
+              <span className="text-[#444] text-[10px] tracking-widest" style={{ fontFamily: sans }}>
+                VS
+              </span>
+            </div>
+
+            {/* With TGC */}
+            <AnimateIn direction="left">
+              <div className="border-t-2 border-[#C9A96E] bg-[#0f0f0f] p-10 md:p-14 h-full">
+                <p
+                  className="text-[#C9A96E] text-[9px] tracking-[0.34em] uppercase mb-8"
+                  style={{ fontFamily: sans }}
+                >
+                  With TGC System
+                </p>
+                <p
+                  className="text-[#C9A96E] font-light leading-none mb-8
+                             text-[clamp(4.5rem,12vw,7.5rem)]"
+                  style={{ fontFamily: serif }}
+                >
+                  87.6%
+                </p>
+                <p
+                  className="text-[#555] text-sm leading-relaxed"
+                  style={{ fontFamily: sans, fontWeight: 300 }}
+                >
+                  TP rate when 8D and 1D cycle bias are aligned with your trade direction.
+                  Confirmed in every year from 2017 to 2026 — bull, bear, crash, and recovery.
                 </p>
               </div>
+            </AnimateIn>
 
-              <div className="flex flex-col gap-3 sm:flex-row md:flex-col">
-                <a
-                  href={WHOP_LINK}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center justify-center rounded-2xl bg-[#f5b841] px-6 py-3 text-sm font-semibold text-black transition hover:bg-[#ffd166]"
+            {/* Without */}
+            <AnimateIn delay={100}>
+              <div className="border-t-2 border-[#7A2828] bg-[#0e0b0b] p-10 md:p-14 h-full">
+                <p
+                  className="text-[#7A2828] text-[9px] tracking-[0.34em] uppercase mb-8"
+                  style={{ fontFamily: sans }}
                 >
-                  Join via Whop
-                </a>
-                <a
-                  href={DISCORD_LINK}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-zinc-200 transition hover:border-white/20 hover:bg-white/[0.06]"
+                  Without It
+                </p>
+                <p
+                  className="text-[#7A3535] font-light leading-none mb-8
+                             text-[clamp(4.5rem,12vw,7.5rem)]"
+                  style={{ fontFamily: serif }}
                 >
-                  Join Discord
-                </a>
-                <a
-                  href={INSTAGRAM_LINK}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-3 text-sm font-semibold text-zinc-200 transition hover:border-white/20 hover:bg-white/[0.06]"
+                  39.4%
+                </p>
+                <p
+                  className="text-[#444] text-sm leading-relaxed"
+                  style={{ fontFamily: sans, fontWeight: 300 }}
                 >
-                  Follow Instagram
-                </a>
+                  TP rate when cycle and daily bias oppose your trade direction. Below coin-flip
+                  probability. This is where most traders live — and wonder why nothing works.
+                </p>
               </div>
-            </div>
+            </AnimateIn>
           </div>
-        </section>
+        </div>
+      </section>
 
-      </div>
-    </main>
+      <GoldDivider />
+
+      {/* ══ MODULES ══════════════════════════════════════════════════ */}
+      <section id="modules" className="bg-[#0a0a0a] py-28 px-6">
+        <div className="max-w-6xl mx-auto">
+          <AnimateIn>
+            <div className="mb-14">
+              <SectionLabel text="Course Structure" />
+              <h2
+                className="mt-8 text-white text-[clamp(2.2rem,5vw,4.2rem)] leading-[1.06]"
+                style={{ fontFamily: serif, fontWeight: 600 }}
+              >
+                Seven modules.{" "}
+                <br />
+                <em className="italic" style={{ color: "#C9A96E", fontWeight: 400 }}>
+                  One complete system.
+                </em>
+              </h2>
+            </div>
+          </AnimateIn>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 border-t border-l border-[#1A1A1A]">
+            {modules.map((mod, i) => (
+              <AnimateIn key={mod.num} delay={i * 60}>
+                <div className="module-card border-b border-r border-[#1A1A1A] p-10 group
+                               hover:bg-[#0e0e0e] transition-colors duration-300">
+                  <div className="flex items-start gap-6">
+                    <span
+                      className="text-[#C9A96E]/18 text-5xl font-light leading-none flex-shrink-0
+                                 select-none group-hover:text-[#C9A96E]/35 transition-colors duration-300"
+                      style={{ fontFamily: serif }}
+                    >
+                      {mod.num}
+                    </span>
+                    <div>
+                      <p
+                        className="text-[#C9A96E] text-[9px] tracking-[0.3em] uppercase mb-2"
+                        style={{ fontFamily: sans }}
+                      >
+                        {mod.category}
+                      </p>
+                      <h3
+                        className="text-white text-xl mb-3 group-hover:text-white transition-colors duration-300"
+                        style={{ fontFamily: serif, fontWeight: 600 }}
+                      >
+                        {mod.title}
+                      </h3>
+                      <p
+                        className="text-[#4A4A4A] text-sm leading-relaxed
+                                   group-hover:text-[#666] transition-colors duration-300"
+                        style={{ fontFamily: sans, fontWeight: 300 }}
+                      >
+                        {mod.body}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </AnimateIn>
+            ))}
+            {/* Even out the grid for odd module count */}
+            {modules.length % 2 !== 0 && (
+              <div className="hidden md:block border-b border-r border-[#1A1A1A]" />
+            )}
+          </div>
+        </div>
+      </section>
+
+      <GoldDivider />
+
+      {/* ══ ACCESS / CTA ═════════════════════════════════════════════ */}
+      <section id="access" className="relative bg-[#0a0a0a] py-36 px-6 overflow-hidden">
+        {/* Bottom glow */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+        >
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2
+                          w-[700px] h-[350px] rounded-full
+                          bg-[#C9A96E]/[0.06] blur-[110px]" />
+        </div>
+
+        <AnimateIn className="relative z-10 max-w-3xl mx-auto text-center">
+          <SectionLabel text="Exclusively Yours" />
+
+          <h2
+            className="mt-10 mb-6 text-white text-[clamp(2.2rem,6vw,4.8rem)] leading-[1.06]"
+            style={{ fontFamily: serif, fontWeight: 600 }}
+          >
+            The complete TGC system.{" "}
+            <br />
+            <em className="italic" style={{ color: "#C9A96E", fontWeight: 400 }}>
+              Get free access.
+            </em>
+          </h2>
+
+          <p
+            className="text-[#4E4E4E] text-base leading-relaxed mb-14 max-w-xl mx-auto"
+            style={{ fontFamily: sans, fontWeight: 300 }}
+          >
+            Enter your email and we&apos;ll send you the full Mean Reversion Student Guide —
+            no cost, no catch.
+          </p>
+
+          <LeadForm />
+
+          <p
+            className="mt-10 text-[#2E2E2E] text-[10px] tracking-[0.34em] uppercase"
+            style={{ fontFamily: sans }}
+          >
+            ◆&nbsp;&nbsp;Confidential – For Educational Use&nbsp;&nbsp;◆
+          </p>
+        </AnimateIn>
+      </section>
+    </>
   );
 }

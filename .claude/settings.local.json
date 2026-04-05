@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(npm install:*)",
-      "Bash(npx next:*)"
+      "Bash(npx next:*)",
+      "Bash(__NEW_LINE_e8bf4b333ad35f8a__ cp:*)"
     ],
     "additionalDirectories": [
       "c:\\Users\\abhyu\\hauz-khas-ai-demo"
